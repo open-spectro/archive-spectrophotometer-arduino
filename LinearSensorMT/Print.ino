@@ -73,6 +73,12 @@ void printHeader(Print* output, unsigned int backgroundArray[], byte channel, in
   output->print(getParameter(PARAM_GREEN_POINT));
   output->print("/");
   output->print(getParameter(PARAM_BLUE_POINT));
+  output->print(",REF");
+  output->print(getParameter(PARAM_RED_NM));
+  output->print("/");
+  output->print(getParameter(PARAM_GREEN_NM));
+  output->print("/");
+  output->print(getParameter(PARAM_BLUE_NM));
 // we print epoch
 //  output->print(",E");
 //  output->print(now());

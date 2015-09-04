@@ -25,6 +25,9 @@
 #define PARAM_BLUE_INTENSITY    6
 #define PARAM_NUMBER_SCAN       7
 
+#define PARAM_RED_NM            10
+#define PARAM_GREEN_NM          11
+#define PARAM_BLUE_NM           12
 
 #define PARAM_RED_TEST          20
 #define PARAM_GREEN_TEST        21
