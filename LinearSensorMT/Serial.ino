@@ -97,8 +97,12 @@ void printResult(char* data, Print* output) {
       else if (data[0]=='c') {
         calibrate();
       }
+      else if (data[0]=='i') {
+        initParameters();
+        output->println(F("done"));
+      }
       else if (data[0]=='g') {
-        testGreenIntensity();
+        initParameters();
       }
       else if (data[0]=='t') {
         testAllColors();
@@ -159,12 +163,14 @@ void serialPrintHelp(Print* output) {
   output->println(F("(e)poch"));
   output->println(F("(f)ree mem"));
   output->println(F("(h)elp"));
-  //  output->println(F("(i)2c"));
+  output->println(F("(i)nitialize parameters"));
   //  output->println(F("(l)og"));
   //  output->println(F("(q)ualifier"));
   output->println(F("(s)ettings"));
   output->println(F("(z) eeprom"));
 }
+
+
 
 
 

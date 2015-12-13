@@ -60,7 +60,9 @@ void realExperiment() {
   unsigned int signalArray[ARRAY_SIZE]; // <-- the array where the readout of the photodiodes is stored, as integers
   unsigned int backgroundArray[ARRAY_SIZE];
 
-  for (int i=0; i<10; i++) {
+  byte delaySeconds=getParameter(PARAM_DELAY_EXPERIMENT);
+
+  for (int i=0; i<delaySeconds; i++) {
     analogWrite(BLUE, 255);
     delay(500);
     analogWrite(BLUE, 0);
@@ -75,7 +77,7 @@ void realExperiment() {
   diffArray(signalArray, backgroundArray);
   printResult(output, signalArray, backgroundArray, 5, currentIntensity);
 
-  for (int i=0; i<10; i++) {
+  for (int i=0; i<delaySeconds; i++) {
     analogWrite(GREEN, 255);
     delay(500);
     analogWrite(GREEN, 0);
