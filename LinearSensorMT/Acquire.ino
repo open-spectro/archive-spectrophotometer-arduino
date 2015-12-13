@@ -44,7 +44,7 @@ void acquire(unsigned int intArray[], byte nbRepeat) {
   clearArray(intArray);
   acquireOne(intArray, false);   // an empty cycle
 
-    for (int counter=0; counter<nbRepeat; counter++) {
+  for (int counter=0; counter<nbRepeat; counter++) {
     acquireOne(intArray, true);
   }
 }
