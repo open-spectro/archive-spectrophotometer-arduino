@@ -157,7 +157,7 @@ void initParameters() {
   setAndSaveParameter(PARAM_COMPRESSION, 0);
   setAndSaveParameter(PARAM_RED_INTENSITY, 255);
   setAndSaveParameter(PARAM_GREEN_INTENSITY, 255);
-  setAndSaveParameter(PARAM_BLUE_INTENSITY, 212552);
+  setAndSaveParameter(PARAM_BLUE_INTENSITY, 255);
   setAndSaveParameter(PARAM_NUMBER_SCAN, 63);
   setAndSaveParameter(PARAM_DELAY_EXPERIMENT, 20);
   setAndSaveParameter(PARAM_RED_NM, 630);
