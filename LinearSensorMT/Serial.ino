@@ -65,6 +65,9 @@ void printResult(char* data, Print* output) {
     else if (inChar=='s') { // show settings
       printParameters(output);
     }
+        else if (inChar=='v') { // show settings
+      simpleDiff();
+    }
     else if (inChar=='z') { // show debug info
       getStatusEEPROM(output);
     } 
@@ -164,6 +167,7 @@ void serialPrintHelp(Print* output) {
   output->println(F("(f)ree mem"));
   output->println(F("(h)elp"));
   output->println(F("(i)nitialize parameters"));
+    output->println(F("le(v)el"));
   //  output->println(F("(l)og"));
   //  output->println(F("(q)ualifier"));
   output->println(F("(s)ettings"));
