@@ -25,6 +25,7 @@
 #define PARAM_BLUE_INTENSITY    6
 #define PARAM_NUMBER_SCAN       7
 #define PARAM_DELAY_EXPERIMENT  8
+#define PARAM_INTEGRATION_TIME  9
 
 #define PARAM_RED_NM            10
 #define PARAM_GREEN_NM          11
@@ -157,9 +158,10 @@ void initParameters() {
   setAndSaveParameter(PARAM_COMPRESSION, 0);
   setAndSaveParameter(PARAM_RED_INTENSITY, 255);
   setAndSaveParameter(PARAM_GREEN_INTENSITY, 255);
-  setAndSaveParameter(PARAM_BLUE_INTENSITY, 212552);
+  setAndSaveParameter(PARAM_BLUE_INTENSITY, 255);
   setAndSaveParameter(PARAM_NUMBER_SCAN, 63);
   setAndSaveParameter(PARAM_DELAY_EXPERIMENT, 20);
+  setAndSaveParameter(PARAM_INTEGRATION_TIME, 20);
   setAndSaveParameter(PARAM_RED_NM, 630);
   setAndSaveParameter(PARAM_GREEN_NM, 535);
   setAndSaveParameter(PARAM_BLUE_NM, 475);

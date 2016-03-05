@@ -1,7 +1,7 @@
 
 unsigned int acquireOne(unsigned int intArray[], boolean append) {
   unsigned int currentMax=0;
-  delay(INTEGRATION_TIME);
+  delay(getParameter(PARAM_INTEGRATION_TIME));
   resetClockPulse();
   for(int i = 0; i < 128; i++)
   {
@@ -42,6 +42,7 @@ void acquire(unsigned int intArray[]) {
 
 void acquire(unsigned int intArray[], byte nbRepeat) {
   clearArray(intArray);
+  
   acquireOne(intArray, false);   // an empty cycle
 
     for (int counter=0; counter<nbRepeat; counter++) {

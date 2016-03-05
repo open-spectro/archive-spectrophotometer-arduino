@@ -2,6 +2,7 @@
 // and get the maximal
 
 void calibrate() {
+  fullOff();
   Print* output=getOutput();
   output->println(F("Calibrating ..."));
   for (byte i=0; i<sizeof(RGB); i++) {

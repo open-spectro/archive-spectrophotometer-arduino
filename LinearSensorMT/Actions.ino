@@ -71,6 +71,7 @@ void realExperiment() {
 
   int currentIntensity=autoIntensity(WHITE);
 
+  analogWrite(WHITE, currentIntensity-1);
   acquire(signalArray);
   analogWrite(WHITE, 0);
   acquire(backgroundArray);

@@ -13,7 +13,6 @@
 
 #define AO_PIN1 A1
 #define AO_PIN2 A2
-#define INTEGRATION_TIME 20
 
 
 #define REPEAT_CALIBRATE     10
