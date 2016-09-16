@@ -160,11 +160,11 @@ void initParameters() {
   setAndSaveParameter(PARAM_GREEN_INTENSITY, 255);
   setAndSaveParameter(PARAM_BLUE_INTENSITY, 255);
   setAndSaveParameter(PARAM_NUMBER_SCAN, 63);
-  setAndSaveParameter(PARAM_DELAY_EXPERIMENT, 20);
+  setAndSaveParameter(PARAM_DELAY_EXPERIMENT, 10);
   setAndSaveParameter(PARAM_INTEGRATION_TIME, 20);
-  setAndSaveParameter(PARAM_RED_NM, 630);
-  setAndSaveParameter(PARAM_GREEN_NM, 535);
-  setAndSaveParameter(PARAM_BLUE_NM, 475);
+  setAndSaveParameter(PARAM_RED_NM, 627);
+  setAndSaveParameter(PARAM_GREEN_NM, 520);
+  setAndSaveParameter(PARAM_BLUE_NM, 455);
   setAndSaveParameter(PARAM_RED_TEST, 255);
   setAndSaveParameter(PARAM_GREEN_TEST, 255);
   setAndSaveParameter(PARAM_BLUE_TEST, 255);
