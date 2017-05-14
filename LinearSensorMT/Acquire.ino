@@ -3,7 +3,7 @@ unsigned int acquireOne(unsigned int intArray[], boolean append) {
   unsigned int currentMax=0;
   delay(getParameter(PARAM_INTEGRATION_TIME));
   resetClockPulse();
-  for(int i = 0; i < 128; i++)
+  for(int i = 0; i < ARRAY_SIZE/2; i++)
   {
     unsigned int currentValue=analogRead(AO_PIN1);
     if (currentValue>currentMax) currentMax=currentValue;
@@ -13,7 +13,7 @@ unsigned int acquireOne(unsigned int intArray[], boolean append) {
     currentValue=analogRead(AO_PIN2);
     if (currentValue>currentMax) currentMax=currentValue;
     if (append) {
-      intArray[i+128] += currentValue;
+      intArray[i+ARRAY_SIZE/2] += currentValue;
     }    
     clockPulse();
   }
@@ -42,7 +42,6 @@ void acquire(unsigned int intArray[]) {
 
 void acquire(unsigned int intArray[], byte nbRepeat) {
   clearArray(intArray);
-  
   acquireOne(intArray, false);   // an empty cycle
 
   for (int counter=0; counter<nbRepeat; counter++) {

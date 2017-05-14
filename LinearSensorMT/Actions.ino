@@ -1,8 +1,4 @@
-
-
-void setupActions() {
-
-}
+void setupActions() {}
 
 void blinkLed(byte color) {
   byte delaySeconds=getParameter(PARAM_DELAY_EXPERIMENT);
@@ -13,8 +9,6 @@ void blinkLed(byte color) {
     delay(500);
   }
 }
-
-
 
 void fullOn() {
   for (byte i=0; i<sizeof(LEDS); i++) {
@@ -45,8 +39,6 @@ void rgbOn() {
   diffArray(signalArray, backgroundArray);
   printResult(output, signalArray, backgroundArray, 7, getParameter(PARAM_RED_INTENSITY));
 }
-
-
 
 void testAllColors() {
   fullOff();
@@ -80,12 +72,8 @@ void simpleDiff() {
   blinkLed(GREEN);
   acquire(signalArray);
 
-
-
   printResult(output, signalArray, backgroundArray, 6, 0);
 }
-
-
 
 void realExperiment() {
   fullOff();
@@ -134,10 +122,4 @@ void testGreenIntensity() {
     intensity/=2;
   }
 }
-
-
-
-
-
-
 

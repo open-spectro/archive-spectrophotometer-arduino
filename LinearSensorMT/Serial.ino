@@ -1,200 +1,177 @@
-// The maximal length of a parameter value. It is a int so the value must be between -32768 to 32767
+#define THR_SERIAL         1
+
+#ifdef THR_SERIAL
 
 #define SERIAL_BUFFER_LENGTH 32
+#define SERIAL_MAX_PARAM_VALUE_LENGTH  32
 char serialBuffer[SERIAL_BUFFER_LENGTH];
-byte serialBufferPosition=0;
+byte serialBufferPosition = 0;
 
-NIL_WORKING_AREA(waThreadSerial, 1400); // minimum 128
+NIL_WORKING_AREA(waThreadSerial, 1700); // minimum 128
 NIL_THREAD(ThreadSerial, arg) {
 
   Serial.begin(115200);
-  while(true) {
+  while (true) {
     while (Serial.available()) {
       // get the new byte:
-      char inChar = (char)Serial.read(); 
+      char inChar = (char)Serial.read();
 
-      if (inChar==13 || inChar==10) {
+      if (inChar == 13 || inChar == 10) {
         // this is a carriage return;
-        if (serialBufferPosition>0) {
+        if (serialBufferPosition > 0) {
           printResult(serialBuffer, &Serial);
-        } 
-        serialBufferPosition=0;
-        serialBuffer[0]='\0';
-      } 
+        }
+        serialBufferPosition = 0;
+        serialBuffer[0] = '\0';
+      }
       else {
-        if (serialBufferPosition<SERIAL_BUFFER_LENGTH) {
-          serialBuffer[serialBufferPosition]=inChar;
+        if (serialBufferPosition < SERIAL_BUFFER_LENGTH) {
+          serialBuffer[serialBufferPosition] = inChar;
           serialBufferPosition++;
-          if (serialBufferPosition<SERIAL_BUFFER_LENGTH) {
-            serialBuffer[serialBufferPosition]='\0';
+          if (serialBufferPosition < SERIAL_BUFFER_LENGTH) {
+            serialBuffer[serialBufferPosition] = '\0';
           }
         }
-      }  
+      }
     }
     nilThdSleepMilliseconds(1);
   }
 }
 
+#endif
 
+
+
+/* SerialEvent occurs whenever a new data comes in the
+  hardware serial RX.  This routine is run between each
+  time loop() runs, so using delay inside loop can delay
+  response.  Multiple bytes of data may be available.
+
+  This method will mainly set/read the parameters:
+  Uppercase + number + CR ((-) and 1 to 5 digit) store a parameter (0 to 25 depending the letter)
+  example: A100, A-1
+  -> Many parameters may be set at once
+  example: C10,20,30,40,50
+  Uppercase + CR read the parameter
+  example: A
+  -> Many parameters may be read at once
+  example: A,B,C,D
+  s : read all the parameters
+  h : help
+  l : show the log file
+*/
 
 void printResult(char* data, Print* output) {
-  boolean theEnd=false;
-  byte paramCurrent=0; // Which parameter are we defining
-  // The maximal length of a parameter value. It is a int so the value must be between -32768 to 32767
-#define MAX_PARAM_VALUE_LENGTH 12
-  char paramValue[MAX_PARAM_VALUE_LENGTH];
-  byte paramValuePosition=0;
-  byte i=0;
+  boolean theEnd = false;
+  byte paramCurrent = 0; // Which parameter are we defining
+  char paramValue[SERIAL_MAX_PARAM_VALUE_LENGTH];
+  paramValue[0] = '\0';
+  byte paramValuePosition = 0;
+  byte i = 0;
+  boolean inValue = false;
 
   while (!theEnd) {
-    byte inChar=data[i];
+    byte inChar = data[i];
     i++;
-    if (inChar=='\0' || i==SERIAL_BUFFER_LENGTH) theEnd=true;
-    if (inChar=='d') { // show debug info
-      getDebuggerLog(output);
-    } 
-    else if (inChar=='f') { // show settings
-      printFreeMemory(output);
-    } 
-    else if (inChar=='h') {
-      serialPrintHelp(output);
-    } 
-    else if (inChar=='l') { // show log
-      getLoggerLog(&Serial);
-    } 
-    else if (inChar=='s') { // show settings
-      printParameters(output);
+    if (i == SERIAL_BUFFER_LENGTH) theEnd = true;
+    if (inChar == '\0') {
+      theEnd = true;
     }
-        else if (inChar=='v') { // show settings
-      simpleDiff();
-    }
-    else if (inChar=='z') { // show debug info
-      getStatusEEPROM(output);
-    } 
-    else if (inChar==',') { // store value and increment
-      if (paramCurrent>0) {
-        if (paramValuePosition>0) {
-          setAndSaveParameter(paramCurrent-1,atoi(paramValue));
-          output->println(parameters[paramCurrent-1]);
-        } 
-        else {
-          output->println(parameters[paramCurrent-1]);
-        }
-        if (paramCurrent<=MAX_PARAM) {
-          paramCurrent++;
-          paramValuePosition=0;
-          paramValue[0]='\0';
-        } 
-        else {
-          debugger(1,inChar);
-        }
-      }
-    }
-    else if (theEnd) {
-      if (data[0]=='r') {
-        realExperiment();
-      }
-      else if (data[0]=='a') {
-        rgbOn();
-      }
-      else if (data[0]=='c') {
-        calibrate();
-      }
-      else if (data[0]=='i') {
-        initParameters();
-        output->println(F("done"));
-      }
-      else if (data[0]=='g') {
-        initParameters();
-      }
-      else if (data[0]=='t') {
-        testAllColors();
-      }
-      else if (data[0]=='e') {
-        if (paramValuePosition>0) {
-          setTime(atol(paramValue));
-        } 
-        else {
-          output->println(now());
-        }
-      }
-      // this is a carriage return;
-      else if (paramCurrent>0) {
-        if (paramValuePosition>0) {
-          setAndSaveParameter(paramCurrent-1,atoi(paramValue));
-          output->println(parameters[paramCurrent-1]);
-        } 
-        else {
-          output->println(parameters[paramCurrent-1]);
-        }
-      }      
-    }
-    else if ((inChar>47 && inChar<58) || inChar=='-') { // a number (could be negative)
-      if (paramValuePosition<MAX_PARAM_VALUE_LENGTH) {
-        paramValue[paramValuePosition]=inChar;
+    else if ((inChar > 47 && inChar < 58) || inChar == '-' || inValue) { // a number (could be negative)
+      if (paramValuePosition < SERIAL_MAX_PARAM_VALUE_LENGTH) {
+        paramValue[paramValuePosition] = inChar;
         paramValuePosition++;
-        if (paramValuePosition<MAX_PARAM_VALUE_LENGTH) {
-          paramValue[paramValuePosition]='\0';
+        if (paramValuePosition < SERIAL_MAX_PARAM_VALUE_LENGTH) {
+          paramValue[paramValuePosition] = '\0';
         }
       }
-    } 
-    else if (inChar>64 && inChar<92) { // a character so we define the field
+    }
+    else if (inChar > 64 && inChar < 92) { // an UPPERCASE character so we define the field
       // we extend however the code to allow 2 letters fields !!!
-      // we extend however the code to allow 2 letters fields !!
-      if (paramCurrent>0) {
-        paramCurrent*=26;
+      if (paramCurrent > 0) {
+        paramCurrent *= 26;
       }
-      paramCurrent+=inChar-64;
-      if (paramCurrent>MAX_PARAM) {
-        paramCurrent=0; 
+      paramCurrent += inChar - 64;
+      if (paramCurrent > MAX_PARAM) {
+        paramCurrent = 0;
       }
-    } 
-    if (theEnd) {
-      output->println("");
+    }
+    if (inChar == ',' || theEnd) { // store value and increment
+      if (paramCurrent > 0) {
+        if (paramValuePosition > 0) {
+          setAndSaveParameter(paramCurrent - 1, atoi(paramValue));
+          output->println(parameters[paramCurrent - 1]);
+        }
+        else {
+          output->println(parameters[paramCurrent - 1]);
+        }
+        if (paramCurrent <= MAX_PARAM) {
+          paramCurrent++;
+          paramValuePosition = 0;
+          paramValue[0] = '\0';
+        }
+      }
+    }
+    if (data[0] > 96 && data[0] < 123 && (i > 1 || data[1] < 97 || data[1] > 122)) { // we may have one or 2 lowercasee
+      inValue = true;
     }
   }
+
+  // we will process the commands, it means it starts with lowercase
+  switch (data[0]) {
+    case 'h':
+      printHelp(output);
+      break;
+    case 's':
+      printParameters(output);
+      break;
+    case 'u':
+      processUtilitiesCommand(data[1], paramValue, output);
+      break;
+    default:
+      processSpecificCommand(data, paramValue, output);
+  }
+  output->println("");
 }
 
-
-void serialPrintHelp(Print* output) {
-  output->println(F("(a)ll rgb"));
-  output->println(F("(c)alibrate"));
-  output->println(F("(g)reen intensity test"));  
-  output->println(F("(r)un experiment"));
-  output->println(F("(t)est all colors"));
-  //  output->println(F("(d)ebug"));
-  output->println(F("(e)poch"));
-  output->println(F("(f)ree mem"));
+void printHelp(Print* output) {
   output->println(F("(h)elp"));
-  output->println(F("(i)nitialize parameters"));
-    output->println(F("le(v)el"));
-  //  output->println(F("(l)og"));
-  //  output->println(F("(q)ualifier"));
   output->println(F("(s)ettings"));
-  output->println(F("(z) eeprom"));
+  output->println(F("(u)tilities"));
+
+
+  printSpecificHelp(output);
 }
 
 
 
 
+void noThread(Print* output) {
+  output->println(F("No Thread"));
+}
 
 
+/* Fucntions to convert a number to hexadeciaml */
 
+const char hex[] = "0123456789ABCDEF";
 
+uint8_t toHex(Print* output, byte value) {
+  output->print(hex[value >> 4 & 15]);
+  output->print(hex[value >> 0 & 15]);
+  return value;
+}
 
+uint8_t toHex(Print* output, int value) {
+  byte checkDigit = toHex(output, (byte)(value >> 8 & 255));
+  checkDigit ^= toHex(output, (byte)(value >> 0 & 255));
+  return checkDigit;
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
+uint8_t toHex(Print* output, long value) {
+  byte checkDigit = toHex(output, (int)(value >> 16 & 65535));
+  checkDigit ^= toHex(output, (int)(value >> 0 & 65535));
+  return checkDigit;
+}
 
 
 

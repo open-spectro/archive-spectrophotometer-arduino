@@ -27,12 +27,15 @@
 #define SIpin   7     // <-- Arduino pin delivering the SI (serial-input) pulse to pin 2 of the TSL1402R 
 
 
-byte RGB[]={
-  RED, GREEN, BLUE};
-byte LEDS[]={
-  RED, GREEN, BLUE, WHITE};
-char INFO[]={
-  'R','G','B','W','U','Z','E','A' }; // E: experiment, Z: reference, A: RGB on
+byte RGB[] = {
+  RED, GREEN, BLUE
+};
+byte LEDS[] = {
+  RED, GREEN, BLUE, WHITE
+};
+char INFO[] = {
+  'R', 'G', 'B', 'W', 'U', 'Z', 'E', 'A'
+}; // E: experiment, Z: reference, A: RGB on
 
 
 // #define THR_MONITORING     13  // will also take care of the watch dog
@@ -42,30 +45,20 @@ char INFO[]={
 
 void setup() {
   delay(2000);
+#ifdef KEYBOARD
   Keyboard.begin();
-
+#endif
+#ifdef LOGGER
   setupLogger();
+#endif
   setupDebugger();
   setupParameters();
   setupLinear();
   setupActions();
 
-
   nilSysBegin();
 }
 
-
 void loop() {
 }
-
-
-
-
-
-
-
-
-
-
-
 

@@ -1,4 +1,9 @@
 
+void writeLog(int a, int b) {
+
+}
+
+#ifdef LOGGER
 
 /*
 We have the way to log some event.
@@ -13,6 +18,8 @@ We have the way to log some event.
 /* EEPROM IS LIMITED TO 100000 WRITES !!!! LOG EVENT WRITE TO EEPROM SO TAKE CARE !!!!!!!
  If the MAX_NUMBER_EVENTS change you need to change the pointer in the EEPROM
  */
+
+
 #define MAX_NUMBER_EVENTS 16
 
 #define LOGGER_NOEVENT 0
@@ -31,9 +38,7 @@ byte eventTypes[MAX_NUMBER_EVENTS];
 unsigned long eventTimestamps[MAX_NUMBER_EVENTS];
 float eventParameters[MAX_NUMBER_EVENTS];
 
-void writeLog(int a, int b) {
 
-}
 
 void logger(byte eventType) {
   logger(eventType, FLOAT_MIN_VALUE);
@@ -65,7 +70,6 @@ void logger(byte eventType, float parameter) {
   EXROM.write(EE_TARGET_EVENT_TIMES, eventTimestamps, MAX_NUMBER_EVENTS*4);
   EXROM.write(EE_TARGET_EVENT_PARAMS, eventParameters, MAX_NUMBER_EVENTS*4);
 }
-
 
 
 void setupLogger() {
@@ -114,5 +118,6 @@ void print2Digits(Print* output, int number) {
   output->print(number);
 }
 
+#endif
 
 
